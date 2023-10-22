@@ -63,19 +63,18 @@ service /lecturers on new http:Listener(1337) {
             };
         }
         return lectureEntry;
-    }
+}
     
-    resource function get lect/Officenum/[string Officenum]() returns LectureEntry|InvalidsNumCodeError {
-        LectureEntry? lectureEntry = lectureTable[Officenum];
-        if lectureEntry is () {
-            return {
-                body: {
-                    errmsg: string `Invalid Student number: ${Officenum}`
-                }
-            };
+resource function get lect/Officenum/[string Officenum]() returns LectureEntry[]|InvalidsNumCodeError {
+    LectureEntry[] officeNumEntries = [];
+    foreach var lectureEntry in lectureTable {
+        if (lectureEntry.Officenum == Officenum) {
+            officeNumEntries.push(lectureEntry);
         }
-        return lectureEntry;
     }
+    return officeNumEntries;
+}
+
 
     resource function delete sNum/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
         LectureEntry? lectureEntry = lectureTable[s_num];
@@ -88,13 +87,7 @@ service /lecturers on new http:Listener(1337) {
         }
         return lectureEntry;
     }
-    resource function get cour() returns string {
-        return "Hi!";
-    }
-    resource function get office() returns string {
-        return "Hi!";
-    }
-
+  
 }
     public type LectureEntry record {|
     readonly string s_num;
