@@ -23,16 +23,16 @@ service /lecturers on new http:Listener(1337) {
         }
     }
 
-    resource function get lect/[string iso_code]() returns CovidEntry|InvalidIsoCodeError {
-        CovidEntry? covidEntry = covidTable[iso_code];
-        if covidEntry is () {
+    resource function get lect/[string s_num]() returns lectureEntry|InvalidsNumCodeError {
+        LectureEntry? lectureEntry = lectureTable[s_num];
+        if lectureEntry is () {
             return {
                 body: {
-                    errmsg: string `Invalid ISO Code: ${iso_code}`
+                    errmsg: string `Invalid Studen number: ${s_num}`
                 }
             };
         }
-        return covidEntry;
+        return lectureEntry;
     }
     resource function get lectInfo() returns string {
         return "Hi!";
@@ -49,7 +49,7 @@ service /lecturers on new http:Listener(1337) {
 
 }
     public type LectureEntry record {|
-    readonly decimal s_num;
+    readonly string s_num;
     string name;
     string course;
     string Lectinfo;
@@ -57,9 +57,9 @@ service /lecturers on new http:Listener(1337) {
 |};
 
 public final table<LectureEntry> key(s_num) lectureTable = table [
-    {s_num: 123, name: "Job", course: "Math", Lectinfo: "cool", Officenum: 146084},
-    {s_num: 321, name: "Sam", course: "Greek", Lectinfo: "bad", Officenum: 568637},
-    {s_num: 101, name: "Bill", course: "Math", Lectinfo: "meh", Officenum: 4389227}
+    {s_num: "123", name: "Job", course: "Math", Lectinfo: "cool", Officenum: 146084},
+    {s_num: "321", name: "Sam", course: "Greek", Lectinfo: "bad", Officenum: 568637},
+    {s_num: "101", name: "Bill", course: "Math", Lectinfo: "meh", Officenum: 4389227}
 ];
 
 public type ConflictingsNumCodesError record {|
