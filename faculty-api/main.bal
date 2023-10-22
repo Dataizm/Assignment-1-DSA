@@ -2,8 +2,8 @@ import ballerina/http;
 
 service /lecturers on new http:Listener(1337) {
 
-  resource function get Lect() returns string {
-        return "Hi!";
+  resource function get Lect() returns LectureEntry[] {
+        return lectureTable.toArray();
     }
     resource function post Lect(@http:Payload LectureEntry[] lectureEntries) 
     returns LectureEntry[]|ConflictingsNumCodesError  {
@@ -22,9 +22,20 @@ service /lecturers on new http:Listener(1337) {
             return lectureEntries;
         }
     }
-    resource function put upLect() returns string {
-        return "Hi!";
+    resource function put lect/[string sNum](@http:Payload LectureEntry updatedLectureEntry) 
+        returns LectureEntry|NotFoundError|ConflictError {
+    // Check if the entry exists
+    if (lectureTable.hasKey(sNum)) {
+        // Update the entry
+        lectureTable[sNum] = updatedLectureEntry;
+        // Return the updated entry
+        return updatedLectureEntry;
+    } else {
+        // If the entry does not exist, return a not found error
+        return { body: { errmsg: "Lecture Entry not found for staff number: " + sNum }};
     }
+}
+
     resource function get lectInfo() returns string {
         return "Hi!";
     }
@@ -41,9 +52,15 @@ service /lecturers on new http:Listener(1337) {
 }
     public type LectureEntry record {|
     readonly string s_num;
-    string country;
-    decimal cases;
-    decimal deaths;
+    string name;
+    string course;
+    string office;
     decimal recovered;
     decimal active;
 |};
+
+public final table<CovidEntry> key(iso_code) covidTable = table [
+    {iso_code: "AFG", country: "Afghanistan", cases: 159303, deaths: 7386, recovered: 146084, active: 5833},
+    {iso_code: "SL", country: "Sri Lanka", cases: 598536, deaths: 15243, recovered: 568637, active: 14656},
+    {iso_code: "US", country: "USA", cases: 69808350, deaths: 880976, recovered: 43892277, active: 25035097}
+];
