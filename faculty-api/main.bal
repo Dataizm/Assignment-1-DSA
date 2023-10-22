@@ -23,7 +23,7 @@ service /lecturers on new http:Listener(1337) {
         }
     }
 
-    resource function get lect/[string s_num]() returns lectureEntry|InvalidsNumCodeError {
+    resource function get lect/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
         LectureEntry? lectureEntry = lectureTable[s_num];
         if lectureEntry is () {
             return {
