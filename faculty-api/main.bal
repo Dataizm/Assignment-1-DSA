@@ -34,6 +34,18 @@ service /lecturers on new http:Listener(1337) {
         return lectureEntry;
     }
 
+        resource function get lect/course/ [string course]() returns LectureEntry|InvalidsNumCodeError {
+        LectureEntry? lectureEntry = lectureTable[course];
+        if lectureEntry is () {
+            return {
+                body: {
+                    errmsg: string `Invalid course info : ${course}`
+                }
+            };
+        }
+        return lectureEntry;
+    }
+
     resource function get lect/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
         LectureEntry? lectureEntry = lectureTable[s_num];
         if lectureEntry is () {
@@ -45,6 +57,19 @@ service /lecturers on new http:Listener(1337) {
         }
         return lectureEntry;
     }
+    
+    resource function get lect/Officenum/[string Officenum]() returns LectureEntry|InvalidsNumCodeError {
+        LectureEntry? lectureEntry = lectureTable[Officenum];
+        if lectureEntry is () {
+            return {
+                body: {
+                    errmsg: string `Invalid Student number: ${Officenum}`
+                }
+            };
+        }
+        return lectureEntry;
+    }
+
     resource function delete sNum() returns string {
         return "Hi!";
     }
@@ -61,13 +86,13 @@ service /lecturers on new http:Listener(1337) {
     string name;
     string course;
     string Lectinfo;
-    decimal Officenum;
+    string Officenum;
 |};
 
 public final table<LectureEntry> key(s_num) lectureTable = table [
-    {s_num: "123", name: "Job", course: "Math", Lectinfo: "cool", Officenum: 146084},
-    {s_num: "321", name: "Sam", course: "Greek", Lectinfo: "bad", Officenum: 568637},
-    {s_num: "101", name: "Bill", course: "Math", Lectinfo: "meh", Officenum: 4389227}
+    {s_num: "123", name: "Job", course: "Math", Lectinfo: "cool", Officenum: "146084"},
+    {s_num: "321", name: "Sam", course: "Greek", Lectinfo: "bad", Officenum: "568637"},
+    {s_num: "101", name: "Bill", course: "Math", Lectinfo: "meh", Officenum: "4389227"}
 ];
 
 public type ConflictingsNumCodesError record {|
