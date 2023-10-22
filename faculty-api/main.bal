@@ -1,4 +1,5 @@
 import ballerina/http;
+import ballerina/io;
 
 service /lecturers on new http:Listener(1337) {
 
@@ -32,6 +33,14 @@ service /lecturers on new http:Listener(1337) {
             };
         }
         return lectureEntry;
+    }
+ resource function put updateLect(LectureEntry lectureEntry) returns string {
+        io:println(lectureEntry);
+        error? err = lectureTable.put(lectureEntry);
+        if (err is error) {
+            return string `Error, ${err.message()}`;
+        }
+        return string `${lectureEntry.name} saved successfully`;
     }
 
         resource function get lect/course/[string course]() returns LectureEntry[] {
