@@ -22,20 +22,28 @@ service /lecturers on new http:Listener(1337) {
             return lectureEntries;
         }
     }
+    resource function get lect/info/[string Lectinfo]() returns LectureEntry|InvalidsNumCodeError {
+        LectureEntry? lectureEntry = lectureTable[Lectinfo];
+        if lectureEntry is () {
+            return {
+                body: {
+                    errmsg: string `Invalid info : ${Lectinfo}`
+                }
+            };
+        }
+        return lectureEntry;
+    }
 
     resource function get lect/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
         LectureEntry? lectureEntry = lectureTable[s_num];
         if lectureEntry is () {
             return {
                 body: {
-                    errmsg: string `Invalid Studen number: ${s_num}`
+                    errmsg: string `Invalid Student number: ${s_num}`
                 }
             };
         }
         return lectureEntry;
-    }
-    resource function get lectInfo() returns string {
-        return "Hi!";
     }
     resource function delete sNum() returns string {
         return "Hi!";
