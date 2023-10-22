@@ -2,7 +2,10 @@ import ballerina/http;
 
 service /lecturers on new http:Listener(1337) {
 
-    resource function post addLect(@http:Payload LectureEntry[] lectureEntries) 
+  resource function get Lect() returns string {
+        return "Hi!";
+    }
+    resource function post Lect(@http:Payload LectureEntry[] lectureEntries) 
     returns LectureEntry[]|ConflictingsNumCodesError  {
          string[] conflictingsNum = from LectureEntry lectureEntry in lectureEntries
             where lectureTable.hasKey(lectureEntry.s_num)
@@ -18,9 +21,6 @@ service /lecturers on new http:Listener(1337) {
             lectureEntries.forEach(lectureEntry => lectureTable.add(lectureEntry));
             return lectureEntries;
         }
-    }
-    resource function get allLect() returns string {
-        return "Hi!";
     }
     resource function put upLect() returns string {
         return "Hi!";
