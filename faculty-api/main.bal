@@ -1,6 +1,6 @@
 import ballerina/http;
 
-service /hello on new http:Listener(1337) {
+service /lecturers on new http:Listener(1337) {
 
     resource function get sayHello() returns string {
         return "Hello, World!";
