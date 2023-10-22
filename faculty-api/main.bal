@@ -34,17 +34,15 @@ service /lecturers on new http:Listener(1337) {
         return lectureEntry;
     }
 
-        resource function get lect/course/ [string course]() returns LectureEntry|InvalidsNumCodeError {
-        LectureEntry? lectureEntry = lectureTable[course];
-        if lectureEntry is () {
-            return {
-                body: {
-                    errmsg: string `Invalid course info : ${course}`
-                }
-            };
+        resource function get lect/course/[string course]() returns LectureEntry[] {
+    LectureEntry[] courseEntries = [];
+    foreach var lectureEntry in lectureTable {
+        if (lectureEntry.course == course) {
+            courseEntries.push(lectureEntry);
         }
-        return lectureEntry;
     }
+    return courseEntries;
+}
 
     resource function get lect/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
         LectureEntry? lectureEntry = lectureTable[s_num];
