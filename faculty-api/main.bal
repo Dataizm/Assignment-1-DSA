@@ -54,13 +54,12 @@ service /lecturers on new http:Listener(1337) {
     readonly string s_num;
     string name;
     string course;
-    string office;
-    decimal recovered;
-    decimal active;
+    string Lectinfo;
+    decimal Officenum;
 |};
 
-public final table<CovidEntry> key(iso_code) covidTable = table [
-    {iso_code: "AFG", country: "Afghanistan", cases: 159303, deaths: 7386, recovered: 146084, active: 5833},
-    {iso_code: "SL", country: "Sri Lanka", cases: 598536, deaths: 15243, recovered: 568637, active: 14656},
-    {iso_code: "US", country: "USA", cases: 69808350, deaths: 880976, recovered: 43892277, active: 25035097}
+public final table<LectureEntry> key(s_num) lectureTable = table [
+    {s_num: "AFG", country: "Afghanistan", cases: 159303, deaths: 7386, recovered: 146084, active: 5833},
+    {s_num: "SL", country: "Sri Lanka", cases: 598536, deaths: 15243, recovered: 568637, active: 14656},
+    {s_num: "US", country: "USA", cases: 69808350, deaths: 880976, recovered: 43892277, active: 25035097}
 ];
