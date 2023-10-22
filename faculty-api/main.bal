@@ -2,10 +2,10 @@ import ballerina/http;
 
 service /lecturers on new http:Listener(1337) {
 
-  resource function get Lect() returns LectureEntry[] {
+  resource function get lect() returns LectureEntry[] {
         return lectureTable.toArray();
     }
-    resource function post Lect(@http:Payload LectureEntry[] lectureEntries) 
+    resource function post lect(@http:Payload LectureEntry[] lectureEntries) 
     returns LectureEntry[]|ConflictingsNumCodesError  {
          string[] conflictingsNum = from LectureEntry lectureEntry in lectureEntries
             where lectureTable.hasKey(lectureEntry.s_num)
@@ -22,20 +22,18 @@ service /lecturers on new http:Listener(1337) {
             return lectureEntries;
         }
     }
-    resource function put lect/[string sNum](@http:Payload LectureEntry updatedLectureEntry) 
-        returns LectureEntry|NotFoundError|ConflictError {
-    // Check if the entry exists
-    if (lectureTable.hasKey(sNum)) {
-        // Update the entry
-        lectureTable[sNum] = updatedLectureEntry;
-        // Return the updated entry
-        return updatedLectureEntry;
-    } else {
-        // If the entry does not exist, return a not found error
-        return { body: { errmsg: "Lecture Entry not found for staff number: " + sNum }};
-    }
-}
 
+    resource function get lect/[string iso_code]() returns CovidEntry|InvalidIsoCodeError {
+        CovidEntry? covidEntry = covidTable[iso_code];
+        if covidEntry is () {
+            return {
+                body: {
+                    errmsg: string `Invalid ISO Code: ${iso_code}`
+                }
+            };
+        }
+        return covidEntry;
+    }
     resource function get lectInfo() returns string {
         return "Hi!";
     }
@@ -68,7 +66,17 @@ public type ConflictingsNumCodesError record {|
     *http:Conflict;
     ErrorMsg body;
 |};
-public type InvalidIsoCodeError record {|
+public type InvalidsNumCodeError record {|
     *http:NotFound;
     ErrorMsg body;
+|};
+public type ErrorMsg record {|
+    string errmsg;
+|};
+public type NotFoundError record {|
+    *http:NotFound;
+    ErrorMsg body;
+|};
+public type ConflictError record {|
+    string errmsg;
 |};
