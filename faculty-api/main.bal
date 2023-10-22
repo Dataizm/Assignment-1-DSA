@@ -77,8 +77,16 @@ service /lecturers on new http:Listener(1337) {
         return lectureEntry;
     }
 
-    resource function delete sNum() returns string {
-        return "Hi!";
+    resource function delete sNum/[string s_num]() returns LectureEntry|InvalidsNumCodeError {
+        LectureEntry? lectureEntry = lectureTable[s_num];
+        if lectureEntry is () {
+            return {
+                body: {
+                    errmsg: string `Invalid Student number: ${s_num}`
+                }
+            };
+        }
+        return lectureEntry;
     }
     resource function get cour() returns string {
         return "Hi!";
