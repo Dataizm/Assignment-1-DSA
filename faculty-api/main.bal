@@ -51,7 +51,7 @@ service /lecturers on new http:Listener(1337) {
 
 }
     public type LectureEntry record {|
-    readonly string s_num;
+    readonly decimal s_num;
     string name;
     string course;
     string Lectinfo;
@@ -59,7 +59,16 @@ service /lecturers on new http:Listener(1337) {
 |};
 
 public final table<LectureEntry> key(s_num) lectureTable = table [
-    {s_num: "AFG", country: "Afghanistan", cases: 159303, deaths: 7386, recovered: 146084, active: 5833},
-    {s_num: "SL", country: "Sri Lanka", cases: 598536, deaths: 15243, recovered: 568637, active: 14656},
-    {s_num: "US", country: "USA", cases: 69808350, deaths: 880976, recovered: 43892277, active: 25035097}
+    {s_num: 123, name: "Job", course: "Math", Lectinfo: "cool", Officenum: 146084},
+    {s_num: 321, name: "Sam", course: "Greek", Lectinfo: "bad", Officenum: 568637},
+    {s_num: 101, name: "Bill", course: "Math", Lectinfo: "meh", Officenum: 4389227}
 ];
+
+public type ConflictingsNumCodesError record {|
+    *http:Conflict;
+    ErrorMsg body;
+|};
+public type InvalidIsoCodeError record {|
+    *http:NotFound;
+    ErrorMsg body;
+|};
